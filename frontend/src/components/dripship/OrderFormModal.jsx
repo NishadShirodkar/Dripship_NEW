@@ -1,0 +1,156 @@
+import { useState, useEffect } from "react";
+
+const inputBase = {
+  width: "100%", background: "transparent", border: "none",
+  borderBottom: "1px solid rgba(255,255,255,0.15)", color: "#f2f2f0",
+  fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: 14,
+  padding: "10px 0", outline: "none", transition: "border-color 0.3s",
+  boxSizing: "border-box",
+};
+
+const labelBase = {
+  fontFamily: "'Tenor Sans', sans-serif", fontSize: 9, letterSpacing: "0.25em",
+  textTransform: "uppercase", color: "#888884", display: "block", marginBottom: 6,
+};
+
+export default function OrderFormModal({ product, onClose, onAddToCart }) {
+  const [visible, setVisible] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", phone: "" });
+  const [size, setSize] = useState("");
+  const [errors, setErrors] = useState({});
+  const [shake, setShake] = useState("");
+
+  useEffect(() => {
+    requestAnimationFrame(() => setVisible(true));
+  }, []);
+
+  const close = () => {
+    setVisible(false);
+    setTimeout(onClose, 350);
+  };
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim()) e.name = "Required";
+    if (!form.email.trim() || !form.email.includes("@")) e.email = "Valid email required";
+    if (!form.phone.trim()) e.phone = "Required";
+    if (!size) e.size = "Select a size";
+    setErrors(e);
+    if (Object.keys(e).length > 0) {
+      setShake(Object.keys(e)[0]);
+      setTimeout(() => setShake(""), 500);
+    }
+    return Object.keys(e).length === 0;
+  };
+
+  const submit = () => {
+    if (!validate()) return;
+    onAddToCart({
+      productId: product.id, productName: product.name, price: product.price,
+      size, customerName: form.name, customerEmail: form.email,
+      customerPhone: form.phone, quantity: 1,
+    });
+  };
+
+  const Field = ({ label, field, type = "text" }) => (
+    <div style={{ marginBottom: 24 }}>
+      <label style={labelBase}>{label}</label>
+      <input
+        type={type}
+        value={form[field]}
+        onChange={e => { setForm({ ...form, [field]: e.target.value }); setErrors({ ...errors, [field]: "" }); }}
+        onFocus={e => e.target.style.borderBottomColor = "#f2f2f0"}
+        onBlur={e => e.target.style.borderBottomColor = "rgba(255,255,255,0.15)"}
+        style={{
+          ...inputBase,
+          animation: shake === field ? "ds-shake 0.4s ease" : "none",
+        }}
+      />
+      {errors[field] && <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#c45050", marginTop: 4, display: "block" }}>{errors[field]}</span>}
+    </div>
+  );
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 600, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div onClick={close} style={{
+        position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)",
+        opacity: visible ? 1 : 0, transition: "opacity 0.35s ease",
+      }} />
+      <div className="ds-order-modal" style={{
+        width: 440, maxWidth: "90vw", background: "#0f0f0d",
+        border: "1px solid rgba(255,255,255,0.08)", padding: "48px 40px",
+        position: "relative", boxSizing: "border-box",
+        opacity: visible ? 1 : 0, transform: visible ? "translateY(0) scale(1)" : "translateY(30px) scale(0.97)",
+        transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
+        maxHeight: "90vh", overflowY: "auto",
+      }}>
+        <button
+          onClick={close}
+          style={{
+            position: "absolute", top: 16, right: 20, background: "none",
+            border: "none", color: "#888884", fontSize: 18, cursor: "pointer",
+            fontFamily: "'Tenor Sans', sans-serif", transition: "color 0.3s",
+          }}
+          onMouseEnter={e => e.target.style.color = "#f2f2f0"}
+          onMouseLeave={e => e.target.style.color = "#888884"}
+        >✕</button>
+
+        <h3 style={{
+          fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontStyle: "italic",
+          fontSize: 28, color: "#f2f2f0", margin: "0 0 8px",
+        }}>Complete Your Order</h3>
+        <p style={{
+          fontFamily: "'Tenor Sans', sans-serif", fontSize: 9, letterSpacing: "0.25em",
+          color: "#888884", margin: "0 0 32px",
+        }}>— {product.name} / {product.price}</p>
+
+        <Field label="Full Name" field="name" />
+        <Field label="Email Address" field="email" type="email" />
+        <Field label="Phone Number" field="phone" type="tel" />
+
+        {/* Size Selector */}
+        <div style={{ marginBottom: 32 }}>
+          <label style={labelBase}>SELECT SIZE</label>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
+            {product.sizes.map(s => (
+              <button
+                key={s}
+                onClick={() => { setSize(s); setErrors({ ...errors, size: "" }); }}
+                style={{
+                  border: size === s ? "1px solid #f2f2f0" : "1px solid rgba(255,255,255,0.15)",
+                  background: size === s ? "rgba(255,255,255,0.06)" : "none",
+                  color: "#f2f2f0", padding: "8px 14px",
+                  fontFamily: "'Tenor Sans', sans-serif", fontSize: 9,
+                  letterSpacing: "0.15em", cursor: "pointer", transition: "all 0.3s ease",
+                }}
+              >{s}</button>
+            ))}
+          </div>
+          {errors.size && <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#c45050", marginTop: 6, display: "block" }}>{errors.size}</span>}
+        </div>
+
+        <button
+          onClick={submit}
+          style={{
+            width: "100%", background: "#f2f2f0", color: "#080808", border: "none",
+            padding: 16, fontFamily: "'Tenor Sans', sans-serif", fontSize: 10,
+            letterSpacing: "0.25em", textTransform: "uppercase", cursor: "pointer",
+            transition: "background 0.3s ease",
+          }}
+          onMouseEnter={e => e.target.style.background = "#d0d0ce"}
+          onMouseLeave={e => e.target.style.background = "#f2f2f0"}
+        >ADD TO CART</button>
+      </div>
+
+      <style>{`
+        @keyframes ds-shake {
+          0%, 100% { transform: translateX(0); }
+          20% { transform: translateX(-6px); }
+          40% { transform: translateX(6px); }
+          60% { transform: translateX(-4px); }
+          80% { transform: translateX(4px); }
+        }
+      `}</style>
+    </div>
+  );
+}
