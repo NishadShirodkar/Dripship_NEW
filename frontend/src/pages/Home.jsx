@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import SnowflakeCanvas from "../components/dripship/SnowflakeCanvas";
 import Navbar from "../components/dripship/Navbar";
 import HeroSection from "../components/dripship/HeroSection";
 import LatestReleases from "../components/dripship/LatestReleases";
@@ -62,7 +61,6 @@ export default function Home() {
         ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
       `}</style>
 
-      <SnowflakeCanvas />
       <Navbar
         cartCount={cart.length}
         onCartClick={() => setCurrentView(currentView === "cart" ? "home" : "cart")}

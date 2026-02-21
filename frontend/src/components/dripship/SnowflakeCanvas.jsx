@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export default function SnowflakeCanvas() {
+export default function SnowflakeCanvas({ scoped = false, fadeBottom = false }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -10,6 +10,12 @@ export default function SnowflakeCanvas() {
     let flakes = [];
 
     const resize = () => {
+      if (scoped && canvas.parentElement) {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = Math.max(1, rect.width);
+        canvas.height = Math.max(1, rect.height);
+        return;
+      }
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
@@ -50,7 +56,12 @@ export default function SnowflakeCanvas() {
         ctx.translate(f.x, f.y);
         ctx.rotate(f.rotation);
         ctx.font = `${f.size}px serif`;
-        ctx.fillStyle = `rgba(20,25,30,${f.opacity})`;
+        const fadeStart = canvas.height * 0.72;
+        const fadeRange = Math.max(canvas.height * 0.28, 1);
+        const fadeFactor = fadeBottom
+          ? Math.max(0, Math.min(1, 1 - Math.max(0, f.y - fadeStart) / fadeRange))
+          : 1;
+        ctx.fillStyle = `rgba(20,25,30,${f.opacity * fadeFactor})`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(f.char, 0, 0);
@@ -64,13 +75,13 @@ export default function SnowflakeCanvas() {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [scoped, fadeBottom]);
 
   return (
     <canvas
       ref={canvasRef}
       style={{
-        position: "fixed",
+        position: scoped ? "absolute" : "fixed",
         top: 0,
         left: 0,
         width: "100%",

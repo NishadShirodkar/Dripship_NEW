@@ -23,7 +23,7 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
   if (confirmed) {
     return (
       <div style={{
-        minHeight: "100vh", background: "#080808", display: "flex",
+        minHeight: "100vh", background: "#f2f2f0", display: "flex",
         flexDirection: "column", alignItems: "center", justifyContent: "center",
         padding: "100px 20px", boxSizing: "border-box",
         opacity: fadeIn ? 1 : 0, transform: fadeIn ? "translateY(0)" : "translateY(20px)",
@@ -31,11 +31,11 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
       }}>
         <span style={{
           fontFamily: "'Cormorant Garamond', serif", fontSize: 80,
-          color: "rgba(255,255,255,0.15)", lineHeight: 1,
+          color: "rgba(8,8,8,0.15)", lineHeight: 1,
         }}>❄</span>
         <h2 style={{
           fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontStyle: "italic",
-          fontSize: 52, color: "#f2f2f0", margin: "24px 0 16px", textAlign: "center",
+          fontSize: 52, color: "#080808", margin: "24px 0 16px", textAlign: "center",
         }}>Order Confirmed</h2>
         <p style={{
           fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: 14,
@@ -49,12 +49,12 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
           onClick={handleContinue}
           style={{
             marginTop: 36, border: "1px solid rgba(242,242,240,0.4)", background: "none",
-            color: "#f2f2f0", padding: "14px 44px", fontFamily: "'Tenor Sans', sans-serif",
+            color: "#080808", padding: "14px 44px", fontFamily: "'Tenor Sans', sans-serif",
             fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase",
             cursor: "pointer", transition: "all 0.3s ease",
           }}
           onMouseEnter={e => { e.target.style.background = "#f2f2f0"; e.target.style.color = "#080808"; }}
-          onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#f2f2f0"; }}
+          onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#080808"; }}
         >CONTINUE SHOPPING</button>
       </div>
     );
@@ -63,24 +63,24 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
   if (cart.length === 0) {
     return (
       <div style={{
-        minHeight: "100vh", background: "#080808", display: "flex",
+        minHeight: "100vh", background: "#f2f2f0", display: "flex",
         flexDirection: "column", alignItems: "center", justifyContent: "center",
         padding: "100px 20px",
       }}>
         <h2 style={{
           fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontStyle: "italic",
-          fontSize: 32, color: "#f2f2f0", marginBottom: 24,
+          fontSize: 32, color: "#0b0b0b", marginBottom: 24,
         }}>Your cart is empty</h2>
         <button
           onClick={onBackToShop}
           style={{
             border: "1px solid rgba(242,242,240,0.4)", background: "none",
-            color: "#f2f2f0", padding: "14px 44px", fontFamily: "'Tenor Sans', sans-serif",
+            color: "#080808", padding: "14px 44px", fontFamily: "'Tenor Sans', sans-serif",
             fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase",
             cursor: "pointer", transition: "all 0.3s ease",
           }}
-          onMouseEnter={e => { e.target.style.background = "#f2f2f0"; e.target.style.color = "#080808"; }}
-          onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#f2f2f0"; }}
+          onMouseEnter={e => { e.target.style.background = "#0b0b0b"; e.target.style.color = "#080808"; }}
+          onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#080808"; }}
         >SHOP NOW</button>
       </div>
     );
@@ -88,12 +88,12 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
 
   return (
     <div className="ds-cart-view" style={{
-      minHeight: "100vh", background: "#080808", padding: "100px 60px 60px",
+      minHeight: "100vh", background: "#f2f2f0", padding: "100px 60px 60px",
       boxSizing: "border-box",
     }}>
       <h1 style={{
         fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontStyle: "italic",
-        fontSize: 56, color: "#f2f2f0", margin: "0 0 8px",
+        fontSize: 56, color: "#080808", margin: "0 0 8px",
       }}>Your Cart</h1>
       <p style={{
         fontFamily: "'Tenor Sans', sans-serif", fontSize: 9, letterSpacing: "0.25em",
@@ -105,9 +105,9 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
       {cart.map((item, idx) => (
         <div key={idx}>
           <div style={{ display: "flex", gap: 20, alignItems: "flex-start", padding: "16px 0" }}>
-            <div style={{ width: 80, height: 80, background: "#1a1a18", flexShrink: 0 }} />
+            <div style={{ width: 80, height: 80, background: "#f2f2f0", flexShrink: 0 }} />
             <div style={{ flex: 1 }}>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: 14, color: "#f2f2f0" }}>
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: 14, color: "#080808" }}>
                 {item.productName}
               </div>
               <div style={{
@@ -122,7 +122,7 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
             <div style={{ textAlign: "right", flexShrink: 0 }}>
               <div style={{
                 fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 20,
-                color: "#f2f2f0",
+                color: "#080808",
               }}>{item.price}</div>
               <button
                 onClick={() => onRemove(idx)}
@@ -131,7 +131,7 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
                   cursor: "pointer", marginTop: 8, fontFamily: "'Tenor Sans', sans-serif",
                   transition: "color 0.3s",
                 }}
-                onMouseEnter={e => e.target.style.color = "#f2f2f0"}
+                onMouseEnter={e => e.target.style.color = "#080808"}
                 onMouseLeave={e => e.target.style.color = "#888884"}
               >✕</button>
             </div>
@@ -149,7 +149,7 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
           }}>SUBTOTAL</span>
           <span style={{
             fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontSize: 22,
-            color: "#f2f2f0",
+            color: "#080808",
           }}>₹{subtotal.toLocaleString("en-IN")}</span>
         </div>
         <hr style={{ border: "none", borderTop: "1px solid rgba(255,255,255,0.08)", margin: "0 0 24px" }} />
@@ -157,12 +157,12 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
           onClick={handleConfirm}
           style={{
             width: "100%", border: "1px solid rgba(242,242,240,0.4)", background: "none",
-            color: "#f2f2f0", padding: 16, fontFamily: "'Tenor Sans', sans-serif",
+            color: "#080808", padding: 16, fontFamily: "'Tenor Sans', sans-serif",
             fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase",
             cursor: "pointer", transition: "all 0.3s ease",
           }}
           onMouseEnter={e => { e.target.style.background = "#f2f2f0"; e.target.style.color = "#080808"; }}
-          onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#f2f2f0"; }}
+          onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#080808"; }}
         >CONFIRM ORDER</button>
       </div>
 

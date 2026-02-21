@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 const inputBase = {
   width: "100%", background: "transparent", border: "none",
-  borderBottom: "1px solid rgba(255,255,255,0.15)", color: "#f2f2f0",
+  borderBottom: "1px solid rgba(8,8,8,0.2)", color: "#080808",
   fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: 14,
   padding: "10px 0", outline: "none", transition: "border-color 0.3s",
   boxSizing: "border-box",
@@ -10,7 +10,7 @@ const inputBase = {
 
 const labelBase = {
   fontFamily: "'Tenor Sans', sans-serif", fontSize: 9, letterSpacing: "0.25em",
-  textTransform: "uppercase", color: "#888884", display: "block", marginBottom: 6,
+  textTransform: "uppercase", color: "#666", display: "block", marginBottom: 6,
 };
 
 export default function OrderFormModal({ product, onClose, onAddToCart }) {
@@ -59,8 +59,8 @@ export default function OrderFormModal({ product, onClose, onAddToCart }) {
         type={type}
         value={form[field]}
         onChange={e => { setForm({ ...form, [field]: e.target.value }); setErrors({ ...errors, [field]: "" }); }}
-        onFocus={e => e.target.style.borderBottomColor = "#f2f2f0"}
-        onBlur={e => e.target.style.borderBottomColor = "rgba(255,255,255,0.15)"}
+        onFocus={e => e.target.style.borderBottomColor = "#080808"}
+        onBlur={e => e.target.style.borderBottomColor = "rgba(8,8,8,0.2)"}
         style={{
           ...inputBase,
           animation: shake === field ? "ds-shake 0.4s ease" : "none",
@@ -73,12 +73,12 @@ export default function OrderFormModal({ product, onClose, onAddToCart }) {
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 600, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div onClick={close} style={{
-        position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)",
+        position: "absolute", inset: 0, background: "rgba(0,0,0,0.38)",
         opacity: visible ? 1 : 0, transition: "opacity 0.35s ease",
       }} />
       <div className="ds-order-modal" style={{
-        width: 440, maxWidth: "90vw", background: "#0f0f0d",
-        border: "1px solid rgba(255,255,255,0.08)", padding: "48px 40px",
+        width: 440, maxWidth: "90vw", background: "#ffffff",
+        border: "1px solid rgba(8,8,8,0.12)", padding: "48px 40px",
         position: "relative", boxSizing: "border-box",
         opacity: visible ? 1 : 0, transform: visible ? "translateY(0) scale(1)" : "translateY(30px) scale(0.97)",
         transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
@@ -88,20 +88,20 @@ export default function OrderFormModal({ product, onClose, onAddToCart }) {
           onClick={close}
           style={{
             position: "absolute", top: 16, right: 20, background: "none",
-            border: "none", color: "#888884", fontSize: 18, cursor: "pointer",
+            border: "none", color: "#666", fontSize: 18, cursor: "pointer",
             fontFamily: "'Tenor Sans', sans-serif", transition: "color 0.3s",
           }}
-          onMouseEnter={e => e.target.style.color = "#f2f2f0"}
-          onMouseLeave={e => e.target.style.color = "#888884"}
+          onMouseEnter={e => e.target.style.color = "#080808"}
+          onMouseLeave={e => e.target.style.color = "#666"}
         >✕</button>
 
         <h3 style={{
           fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontStyle: "italic",
-          fontSize: 28, color: "#f2f2f0", margin: "0 0 8px",
+          fontSize: 28, color: "#080808", margin: "0 0 8px",
         }}>Complete Your Order</h3>
         <p style={{
           fontFamily: "'Tenor Sans', sans-serif", fontSize: 9, letterSpacing: "0.25em",
-          color: "#888884", margin: "0 0 32px",
+          color: "#666", margin: "0 0 32px",
         }}>— {product.name} / {product.price}</p>
 
         <Field label="Full Name" field="name" />
@@ -117,9 +117,9 @@ export default function OrderFormModal({ product, onClose, onAddToCart }) {
                 key={s}
                 onClick={() => { setSize(s); setErrors({ ...errors, size: "" }); }}
                 style={{
-                  border: size === s ? "1px solid #f2f2f0" : "1px solid rgba(255,255,255,0.15)",
-                  background: size === s ? "rgba(255,255,255,0.06)" : "none",
-                  color: "#f2f2f0", padding: "8px 14px",
+                  border: size === s ? "1px solid #080808" : "1px solid rgba(8,8,8,0.2)",
+                  background: size === s ? "rgba(8,8,8,0.06)" : "none",
+                  color: "#080808", padding: "8px 14px",
                   fontFamily: "'Tenor Sans', sans-serif", fontSize: 9,
                   letterSpacing: "0.15em", cursor: "pointer", transition: "all 0.3s ease",
                 }}
@@ -132,13 +132,13 @@ export default function OrderFormModal({ product, onClose, onAddToCart }) {
         <button
           onClick={submit}
           style={{
-            width: "100%", background: "#f2f2f0", color: "#080808", border: "none",
+            width: "100%", background: "#080808", color: "#ffffff", border: "none",
             padding: 16, fontFamily: "'Tenor Sans', sans-serif", fontSize: 10,
             letterSpacing: "0.25em", textTransform: "uppercase", cursor: "pointer",
             transition: "background 0.3s ease",
           }}
-          onMouseEnter={e => e.target.style.background = "#d0d0ce"}
-          onMouseLeave={e => e.target.style.background = "#f2f2f0"}
+          onMouseEnter={e => e.target.style.background = "#1f1f1f"}
+          onMouseLeave={e => e.target.style.background = "#080808"}
         >ADD TO CART</button>
       </div>
 

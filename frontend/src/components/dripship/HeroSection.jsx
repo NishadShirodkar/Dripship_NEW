@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import SnowflakeCanvas from "./SnowflakeCanvas";
 
 const logoUrl = "/src/assets/dripship_logooo.png";
 
@@ -17,9 +18,20 @@ export default function HeroSection({ onShopClick }) {
     <section style={{
       minHeight: "100vh", display: "flex", flexDirection: "column",
       alignItems: "center", justifyContent: "center", position: "relative",
-      background: "transparent", zIndex: 1,
+      background: "transparent", zIndex: 1, overflow: "hidden",
     }}>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+      <SnowflakeCanvas scoped fadeBottom />
+      <div style={{
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: "30vh",
+        background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(245,245,245,0.82) 72%, #ececec 100%)",
+        pointerEvents: "none",
+        zIndex: 1,
+      }} />
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", position: "relative", zIndex: 2 }}>
       {/* Logo Image */}
       <img
         src={logoUrl}
@@ -72,7 +84,7 @@ export default function HeroSection({ onShopClick }) {
       {/* Scroll Indicator */}
       <div style={{
         position: "absolute", bottom: 40, display: "flex", flexDirection: "column",
-        alignItems: "center", animation: "pulse-scroll 2.5s ease-in-out infinite",
+        alignItems: "center", animation: "pulse-scroll 2.5s ease-in-out infinite", zIndex: 2,
       }}>
         <div style={{ width: 1, height: 40, background: "#666" }} />
         <svg width="10" height="6" viewBox="0 0 10 6" style={{ marginTop: 6 }}>
