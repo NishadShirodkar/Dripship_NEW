@@ -5,6 +5,8 @@ const logoUrl = "/src/assets/dripship_logooo.png";
 
 export default function HeroSection({ onShopClick }) {
   const [stage, setStage] = useState(0);
+  const [hoveredLetter, setHoveredLetter] = useState(-1);
+  const title = "DRIPSHIP";
 
   useEffect(() => {
     const t1 = setTimeout(() => setStage(1), 300);
@@ -49,10 +51,38 @@ export default function HeroSection({ onShopClick }) {
         fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontStyle: "italic",
         fontSize: "clamp(52px, 10vw, 140px)", color: "#080808", letterSpacing: "-0.01em",
         margin: 0, lineHeight: 1,
-        opacity: stage >= 2 ? 1 : 0, transform: stage >= 2 ? "translateY(0)" : "translateY(30px)",
-        transition: "opacity 1.4s ease, transform 1.4s ease",
-      }}>
-        DRIPSHIP
+        animation: stage >= 2 ? "ds-title-float 5.5s ease-in-out infinite" : "none",
+      }} onMouseLeave={() => setHoveredLetter(-1)}>
+        {title.split("").map((char, index) => {
+          const distance = hoveredLetter === -1 ? 99 : Math.abs(index - hoveredLetter);
+          const scale = distance === 0 ? 1.12 : distance === 1 ? 1.05 : distance === 2 ? 1.02 : 1;
+          const lift = distance === 0 ? -4 : distance === 1 ? -2 : 0;
+
+          return (
+            <span
+              key={`${char}-${index}`}
+              style={{
+                display: "inline-block",
+                opacity: stage >= 2 ? 1 : 0,
+                animation: stage >= 2 ? `ds-letter-enter 820ms cubic-bezier(0.16, 1, 0.3, 1) both` : "none",
+                animationDelay: `${index * 90}ms`,
+              }}
+            >
+              <span
+                onMouseEnter={() => setHoveredLetter(index)}
+              style={{
+                display: "inline-block",
+                transform: `translateY(${lift}px) scale(${scale})`,
+                transition: "transform 620ms cubic-bezier(0.16, 1, 0.3, 1)",
+                transformOrigin: "center 72%",
+                cursor: "default",
+              }}
+              >
+                {char}
+              </span>
+            </span>
+          );
+        })}
       </h1>
 
       {/* Tagline */}
@@ -96,6 +126,29 @@ export default function HeroSection({ onShopClick }) {
         @keyframes pulse-scroll {
           0%, 100% { opacity: 0.3; }
           50% { opacity: 0.8; }
+        }
+
+        @keyframes ds-title-float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-2px); }
+        }
+
+        @keyframes ds-letter-enter {
+          0% {
+            opacity: 0;
+            transform: translateY(16px) scale(0.9);
+            filter: blur(1px);
+          }
+          68% {
+            opacity: 1;
+            transform: translateY(-3px) scale(1.035);
+            filter: blur(0);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
         }
       `}</style>
     </section>
