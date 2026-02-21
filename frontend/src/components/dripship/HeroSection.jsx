@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const logoUrl = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_695e41b21f61f1a23ba17380/9a407c3d2_Dripship_logo.png";
+const logoUrl = "/src/assets/dripship_logooo.png";
 
 export default function HeroSection({ onShopClick }) {
   const [stage, setStage] = useState(0);
@@ -19,12 +19,13 @@ export default function HeroSection({ onShopClick }) {
       alignItems: "center", justifyContent: "center", position: "relative",
       background: "transparent", zIndex: 1,
     }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
       {/* Logo Image */}
       <img
         src={logoUrl}
         alt="DRIPSHIP"
         style={{
-          width: "clamp(100px, 18vw, 180px)", height: "auto", marginBottom: 12,
+          width: "clamp(180px, 20vw, 260px)", height: "auto", marginBottom: 12,
           opacity: stage >= 1 ? 1 : 0, transform: stage >= 1 ? "scale(1)" : "scale(0.6)",
           transition: "opacity 1.2s ease, transform 1.2s ease",
           filter: "invert(0)",
@@ -66,6 +67,7 @@ export default function HeroSection({ onShopClick }) {
       >
         SHOP NOW
       </button>
+      </div>
 
       {/* Scroll Indicator */}
       <div style={{
