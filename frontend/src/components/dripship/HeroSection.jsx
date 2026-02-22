@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import SnowflakeCanvas from "./SnowflakeCanvas";
+import SplitText from "./SplitText";
 
 const logoUrl = "/src/assets/dripship_logooo.png";
 
 export default function HeroSection({ onShopClick }) {
   const [stage, setStage] = useState(0);
-  const [hoveredLetter, setHoveredLetter] = useState(-1);
+  const [logoHovered, setLogoHovered] = useState(false);
   const title = "DRIPSHIP";
 
   useEffect(() => {
@@ -38,52 +39,49 @@ export default function HeroSection({ onShopClick }) {
       <img
         src={logoUrl}
         alt="DRIPSHIP"
+        onMouseEnter={() => setLogoHovered(true)}
+        onMouseLeave={() => setLogoHovered(false)}
         style={{
           width: "clamp(180px, 20vw, 260px)", height: "auto", marginBottom: 12,
-          opacity: stage >= 1 ? 1 : 0, transform: stage >= 1 ? "scale(1)" : "scale(0.6)",
-          transition: "opacity 1.2s ease, transform 1.2s ease",
-          filter: "invert(0)",
+          opacity: stage >= 1 ? 1 : 0,
+          transform: stage >= 1
+            ? logoHovered
+              ? "scale(1.12)"
+              : "scale(1)"
+            : "scale(0.6)",
+          transition: "opacity 1.2s ease, transform 560ms cubic-bezier(0.16, 1, 0.3, 1), filter 560ms cubic-bezier(0.16, 1, 0.3, 1)",
+          willChange: "transform, filter",
+          cursor: "pointer",
+          filter: logoHovered
+            ? "invert(0) drop-shadow(0 10px 24px rgba(0,0,0,0.18))"
+            : "invert(0) drop-shadow(0 4px 10px rgba(0,0,0,0.08))",
         }}
       />
 
       {/* Brand Name */}
-      <h1 style={{
-        fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontStyle: "italic",
-        fontSize: "clamp(52px, 10vw, 140px)", color: "#080808", letterSpacing: "-0.01em",
+      <div style={{
+        fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontStyle: "italic",
+        fontSize: "clamp(40px, 7.2vw, 96px)", color: "#080808", letterSpacing: "0.02em",
         margin: 0, lineHeight: 1,
         animation: stage >= 2 ? "ds-title-float 5.5s ease-in-out infinite" : "none",
-      }} onMouseLeave={() => setHoveredLetter(-1)}>
-        {title.split("").map((char, index) => {
-          const distance = hoveredLetter === -1 ? 99 : Math.abs(index - hoveredLetter);
-          const scale = distance === 0 ? 1.12 : distance === 1 ? 1.05 : distance === 2 ? 1.02 : 1;
-          const lift = distance === 0 ? -4 : distance === 1 ? -2 : 0;
-
-          return (
-            <span
-              key={`${char}-${index}`}
-              style={{
-                display: "inline-block",
-                opacity: stage >= 2 ? 1 : 0,
-                animation: stage >= 2 ? `ds-letter-enter 820ms cubic-bezier(0.16, 1, 0.3, 1) both` : "none",
-                animationDelay: `${index * 90}ms`,
-              }}
-            >
-              <span
-                onMouseEnter={() => setHoveredLetter(index)}
-              style={{
-                display: "inline-block",
-                transform: `translateY(${lift}px) scale(${scale})`,
-                transition: "transform 620ms cubic-bezier(0.16, 1, 0.3, 1)",
-                transformOrigin: "center 72%",
-                cursor: "default",
-              }}
-              >
-                {char}
-              </span>
-            </span>
-          );
-        })}
-      </h1>
+      }}>
+        {stage >= 2 && (
+          <SplitText
+            text={title}
+            className="leading-none"
+            delay={90}
+            duration={0.82}
+            ease="power3.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 16, scale: 0.9, filter: "blur(1px)" }}
+            to={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            threshold={0.1}
+            rootMargin="-100px"
+            textAlign="center"
+            tag="h2"
+          />
+        )}
+      </div>
 
       {/* Tagline */}
       <p style={{
@@ -104,8 +102,8 @@ export default function HeroSection({ onShopClick }) {
           transition: "all 0.3s ease", boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
           opacity: stage >= 4 ? 1 : 0,
         }}
-        onMouseEnter={e => { e.target.style.background = "#080808"; e.target.style.color = "#ffffff"; e.target.style.transform = "translateY(-2px)"; e.target.style.boxShadow = "0 6px 25px rgba(0,0,0,0.15)"; }}
-        onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#080808"; e.target.style.transform = "translateY(0)"; e.target.style.boxShadow = "0 4px 15px rgba(0,0,0,0.08)"; }}
+        onMouseEnter={e => { e.currentTarget.style.background = "#080808"; e.currentTarget.style.color = "#ffffff"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 25px rgba(0,0,0,0.15)"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "#080808"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 15px rgba(0,0,0,0.08)"; }}
       >
         SHOP NOW
       </button>
@@ -133,23 +131,6 @@ export default function HeroSection({ onShopClick }) {
           50% { transform: translateY(-2px); }
         }
 
-        @keyframes ds-letter-enter {
-          0% {
-            opacity: 0;
-            transform: translateY(16px) scale(0.9);
-            filter: blur(1px);
-          }
-          68% {
-            opacity: 1;
-            transform: translateY(-3px) scale(1.035);
-            filter: blur(0);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0);
-          }
-        }
       `}</style>
     </section>
   );

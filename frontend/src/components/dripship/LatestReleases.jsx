@@ -1,7 +1,6 @@
-import products from "./products";
 import ProductCard from "./ProductCard";
 
-export default function LatestReleases({ onProductClick }) {
+export default function LatestReleases({ onProductClick, products = [] }) {
   return (
     <section style={{ background: "transparent", padding: "100px 60px", position: "relative", zIndex: 1 }}
       className="ds-releases"

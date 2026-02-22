@@ -5,7 +5,6 @@ const inputBase = {
   borderBottom: "1px solid rgba(8,8,8,0.2)", color: "#080808",
   fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: 14,
   padding: "10px 0", outline: "none", transition: "border-color 0.3s",
-  boxSizing: "border-box",
 };
 
 const labelBase = {
@@ -17,7 +16,7 @@ export default function OrderFormModal({ product, onClose, onAddToCart }) {
   const [visible, setVisible] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [size, setSize] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({ name: "", email: "", phone: "", size: "" });
   const [shake, setShake] = useState("");
 
   useEffect(() => {
@@ -30,20 +29,25 @@ export default function OrderFormModal({ product, onClose, onAddToCart }) {
   };
 
   const validate = () => {
-    const e = {};
+    const e = { name: "", email: "", phone: "", size: "" };
     if (!form.name.trim()) e.name = "Required";
     if (!form.email.trim() || !form.email.includes("@")) e.email = "Valid email required";
     if (!form.phone.trim()) e.phone = "Required";
     if (!size) e.size = "Select a size";
     setErrors(e);
-    if (Object.keys(e).length > 0) {
-      setShake(Object.keys(e)[0]);
+    const invalidFields = Object.entries(e)
+      .filter(([, value]) => Boolean(value))
+      .map(([key]) => key);
+
+    if (invalidFields.length > 0) {
+      setShake(invalidFields[0]);
       setTimeout(() => setShake(""), 500);
     }
-    return Object.keys(e).length === 0;
+    return invalidFields.length === 0;
   };
 
   const submit = () => {
+    if (product.outOfStock) return;
     if (!validate()) return;
     onAddToCart({
       productId: product.id, productName: product.name, price: product.price,
@@ -58,13 +62,22 @@ export default function OrderFormModal({ product, onClose, onAddToCart }) {
       <input
         type={type}
         value={form[field]}
-        onChange={e => { setForm({ ...form, [field]: e.target.value }); setErrors({ ...errors, [field]: "" }); }}
+        onChange={e => {
+          const nextValue = field === "phone"
+            ? e.target.value.replace(/\D/g, "").slice(0, 15)
+            : e.target.value;
+          setForm(prev => ({ ...prev, [field]: nextValue }));
+          setErrors(prev => ({ ...prev, [field]: "" }));
+        }}
         onFocus={e => e.target.style.borderBottomColor = "#080808"}
         onBlur={e => e.target.style.borderBottomColor = "rgba(8,8,8,0.2)"}
         style={{
           ...inputBase,
+          boxSizing: "border-box",
           animation: shake === field ? "ds-shake 0.4s ease" : "none",
         }}
+        inputMode={field === "phone" ? "numeric" : undefined}
+        autoComplete={field === "phone" ? "tel" : undefined}
       />
       {errors[field] && <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#c45050", marginTop: 4, display: "block" }}>{errors[field]}</span>}
     </div>
@@ -91,8 +104,8 @@ export default function OrderFormModal({ product, onClose, onAddToCart }) {
             border: "none", color: "#666", fontSize: 18, cursor: "pointer",
             fontFamily: "'Tenor Sans', sans-serif", transition: "color 0.3s",
           }}
-          onMouseEnter={e => e.target.style.color = "#080808"}
-          onMouseLeave={e => e.target.style.color = "#666"}
+          onMouseEnter={e => e.currentTarget.style.color = "#080808"}
+          onMouseLeave={e => e.currentTarget.style.color = "#666"}
         >✕</button>
 
         <h3 style={{
@@ -131,15 +144,16 @@ export default function OrderFormModal({ product, onClose, onAddToCart }) {
 
         <button
           onClick={submit}
+          disabled={product.outOfStock}
           style={{
-            width: "100%", background: "#080808", color: "#ffffff", border: "none",
+            width: "100%", background: product.outOfStock ? "#9a9a9a" : "#080808", color: "#ffffff", border: "none",
             padding: 16, fontFamily: "'Tenor Sans', sans-serif", fontSize: 10,
             letterSpacing: "0.25em", textTransform: "uppercase", cursor: "pointer",
             transition: "background 0.3s ease",
           }}
-          onMouseEnter={e => e.target.style.background = "#1f1f1f"}
-          onMouseLeave={e => e.target.style.background = "#080808"}
-        >ADD TO CART</button>
+          onMouseEnter={e => { if (!product.outOfStock) e.currentTarget.style.background = "#1f1f1f"; }}
+          onMouseLeave={e => { if (!product.outOfStock) e.currentTarget.style.background = "#080808"; }}
+        >{product.outOfStock ? "OUT OF STOCK" : "ADD TO CART"}</button>
       </div>
 
       <style>{`

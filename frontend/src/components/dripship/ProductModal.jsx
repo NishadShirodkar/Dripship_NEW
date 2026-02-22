@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 export default function ProductModal({ product, onClose, onPlaceOrder }) {
   const [visible, setVisible] = useState(false);
+  const outOfStock = Boolean(product?.outOfStock);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -47,8 +48,8 @@ export default function ProductModal({ product, onClose, onPlaceOrder }) {
             border: "none", color: "#666", fontSize: 18, cursor: "pointer",
             fontFamily: "'Tenor Sans', sans-serif", transition: "color 0.3s",
           }}
-          onMouseEnter={e => e.target.style.color = "#080808"}
-          onMouseLeave={e => e.target.style.color = "#666"}
+          onMouseEnter={e => e.currentTarget.style.color = "#080808"}
+          onMouseLeave={e => e.currentTarget.style.color = "#666"}
         >✕</button>
 
         <p style={{
@@ -76,6 +77,13 @@ export default function ProductModal({ product, onClose, onPlaceOrder }) {
           fontFamily: "'Tenor Sans', sans-serif", fontSize: 13, letterSpacing: "0.2em",
           color: "#080808", margin: "0 0 20px",
         }}>{product.price}</p>
+
+        {outOfStock && (
+          <p style={{
+            fontFamily: "'Tenor Sans', sans-serif", fontSize: 10, letterSpacing: "0.2em",
+            color: "#8f4343", margin: "-8px 0 20px", textTransform: "uppercase",
+          }}>— OUT OF STOCK</p>
+        )}
 
         <hr style={{ border: "none", borderTop: "1px solid rgba(8,8,8,0.12)", margin: "0 0 20px" }} />
 
@@ -105,16 +113,25 @@ export default function ProductModal({ product, onClose, onPlaceOrder }) {
         <hr style={{ border: "none", borderTop: "1px solid rgba(8,8,8,0.12)", margin: "0 0 24px" }} />
 
         <button
-          onClick={() => onPlaceOrder(product)}
+          disabled={outOfStock}
+          onClick={() => { if (!outOfStock) onPlaceOrder(product); }}
           style={{
-            width: "100%", border: "1px solid rgba(8,8,8,0.45)", background: "none",
-            color: "#080808", padding: 16, fontFamily: "'Tenor Sans', sans-serif",
+            width: "100%", border: "1px solid rgba(8,8,8,0.45)", background: outOfStock ? "rgba(8,8,8,0.08)" : "none",
+            color: outOfStock ? "#888" : "#080808", padding: 16, fontFamily: "'Tenor Sans', sans-serif",
             fontSize: 10, letterSpacing: "0.25em", textTransform: "uppercase",
-            cursor: "pointer", transition: "all 0.3s ease",
+            cursor: outOfStock ? "not-allowed" : "pointer", transition: "all 0.3s ease",
           }}
-          onMouseEnter={e => { e.target.style.background = "#080808"; e.target.style.color = "#ffffff"; }}
-          onMouseLeave={e => { e.target.style.background = "none"; e.target.style.color = "#080808"; }}
-        >PLACE ORDER</button>
+          onMouseEnter={e => {
+            if (outOfStock) return;
+            e.currentTarget.style.background = "#080808";
+            e.currentTarget.style.color = "#ffffff";
+          }}
+          onMouseLeave={e => {
+            if (outOfStock) return;
+            e.currentTarget.style.background = "none";
+            e.currentTarget.style.color = "#080808";
+          }}
+        >{outOfStock ? "OUT OF STOCK" : "PLACE ORDER"}</button>
       </div>
 
       <style>{`

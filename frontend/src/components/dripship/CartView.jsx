@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
   const [confirmed, setConfirmed] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
-  const orderId = "DS-" + String(Math.floor(100000 + Math.random() * 900000));
+  const orderIdRef = useRef("DS-" + String(Math.floor(100000 + Math.random() * 900000)));
 
   const subtotal = cart.reduce((sum, item) => {
     const num = parseInt(item.price.replace(/[₹,]/g, ""), 10);
@@ -11,9 +11,15 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
   }, 0);
 
   const handleConfirm = () => {
+    onConfirm({
+      id: orderIdRef.current,
+      createdAt: new Date().toISOString(),
+      itemCount: cart.length,
+      total: subtotal,
+      items: cart,
+    });
     setConfirmed(true);
     setTimeout(() => setFadeIn(true), 50);
-    setTimeout(() => onConfirm(), 1000);
   };
 
   const handleContinue = () => {
@@ -44,7 +50,7 @@ export default function CartView({ cart, onRemove, onConfirm, onBackToShop }) {
         <p style={{
           fontFamily: "'Tenor Sans', sans-serif", fontSize: 10, letterSpacing: "0.25em",
           color: "#888884", marginTop: 20,
-        }}>ORDER ID: {orderId}</p>
+        }}>ORDER ID: {orderIdRef.current}</p>
         <button
           onClick={handleContinue}
           style={{
